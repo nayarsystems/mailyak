@@ -97,17 +97,17 @@ func (m *MailYak) writeHeaders(buf io.Writer) error {
 
 	if len(m.toAddrs) > 0 {
 		commaSeparatedToAddrs := strings.Join(m.toAddrs, ",")
-		fmt.Fprintf(w, "To: %s\r\n", commaSeparatedToAddrs)
+		fmt.Fprintf(buf, "To: %s\r\n", commaSeparatedToAddrs)
 	}
 
 	if len(m.ccAddrs) > 0 {
 		commaSeparatedCCAddrs := strings.Join(m.ccAddrs, ",")
-		fmt.Fprintf(w, "CC: %s\r\n", commaSeparatedCCAddrs)
+		fmt.Fprintf(buf, "CC: %s\r\n", commaSeparatedCCAddrs)
 	}
 
 	if m.writeBccHeader && len(m.bccAddrs) > 0 {
 		commaSeparatedBCCAddrs := strings.Join(m.bccAddrs, ",")
-		fmt.Fprintf(w, "BCC: %s\r\n", commaSeparatedBCCAddrs)
+		fmt.Fprintf(buf, "BCC: %s\r\n", commaSeparatedBCCAddrs)
 	}
 
 	for k, v := range m.headers {
