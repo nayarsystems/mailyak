@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"mime/quotedprintable"
 	"net/textproto"
+	"strings"
 )
 
 func (m *MailYak) buildMime() (*bytes.Buffer, error) {
@@ -94,18 +95,19 @@ func (m *MailYak) writeHeaders(buf io.Writer) error {
 
 	fmt.Fprintf(buf, "Subject: %s\r\n", m.subject)
 
-	for _, to := range m.toAddrs {
-		fmt.Fprintf(buf, "To: %s\r\n", to)
+	if len(m.toAddrs) > 0 {
+		commaSeparatedToAddrs := strings.Join(m.toAddrs, ",")
+		fmt.Fprintf(w, "To: %s\r\n", commaSeparatedToAddrs)
 	}
 
-	for _, cc := range m.ccAddrs {
-		fmt.Fprintf(buf, "CC: %s\r\n", cc)
+	if len(m.ccAddrs) > 0 {
+		commaSeparatedCCAddrs := strings.Join(m.ccAddrs, ",")
+		fmt.Fprintf(w, "CC: %s\r\n", commaSeparatedCCAddrs)
 	}
 
-	if m.writeBccHeader {
-		for _, bcc := range m.bccAddrs {
-			fmt.Fprintf(buf, "BCC: %s\r\n", bcc)
-		}
+	if m.writeBccHeader && len(m.bccAddrs) > 0 {
+		commaSeparatedBCCAddrs := strings.Join(m.bccAddrs, ",")
+		fmt.Fprintf(w, "BCC: %s\r\n", commaSeparatedBCCAddrs)
 	}
 
 	for k, v := range m.headers {
